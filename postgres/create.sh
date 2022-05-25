@@ -12,9 +12,9 @@ docker run \
 
 ./waitForContainer.sh
 
-docker exec -ti -u postgres postgres psql -c "CREATE DATABASE tsa-db;"
+docker exec -ti -u tsa-user postgres psql -c "CREATE DATABASE tsa-db;"
 
-docker exec -ti -u postgres postgres psql -c "CREATE TABLE  price( \
+docker exec -ti -u tsa-user postgres psql -c "CREATE TABLE  price( \
   id BIGSERIAL, \
   time TIMESTAMP, \
   token VARCHAR(5), \
