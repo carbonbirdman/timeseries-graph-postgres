@@ -1,7 +1,7 @@
 {
-  "user": "",
+  "user": "tsa-user",
+  "database": "tsa-db",
+  "password": "password",
   "host": "34.71.135.230",
-  "database": "",
-  "password": "",
   "port": 5432
 }
