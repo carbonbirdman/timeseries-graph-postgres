@@ -44,26 +44,29 @@ app.get("/data", (req, res) => {
   //get();
 });
 
-var dburl = "postgres://YourUserName:YourPassword@localhost:5432/YourDatabase";
-const { Client } = require("pg");
-const client = new Client({
-  connectionString: process.env.DATABASE_URL || dburl,
-  ssl: {
-    rejectUnauthorized: false
-  }
-});
-client.connect();
-
-client.query(
-  "SELECT table_schema,table_name FROM information_schema.tables;",
-  (err, res) => {
-    if (err) throw err;
-    for (let row of res.rows) {
-      console.log(JSON.stringify(row));
+app.get("/postgres", (req, res) => {
+  var dburl =
+    "postgres://YourUserName:YourPassword@localhost:5432/YourDatabase";
+  const { Client } = require("pg");
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL || dburl,
+    ssl: {
+      rejectUnauthorized: false
     }
-    client.end();
-  }
-);
+  });
+  client.connect();
+
+  client.query(
+    "SELECT table_schema,table_name FROM information_schema.tables;",
+    (err, res) => {
+      if (err) throw err;
+      for (let row of res.rows) {
+        console.log(JSON.stringify(row));
+      }
+      client.end();
+    }
+  );
+});
 
 //app.use((req, res, next) => {
 //  res.header("Access-Control-Allow-Origin", "*");
