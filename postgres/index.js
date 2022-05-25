@@ -5,7 +5,6 @@ app.set("view engine", "eta");
 
 const credentials = require("../connection.json");
 
-
 const port = 8080;
 
 app.get("/", (req, res) => {
@@ -18,7 +17,7 @@ app.listen(port, () => {
 
 app.get("/data", (req, res) => {
   let lines = check();
- console.log(lines);
+  console.log(lines);
   res.send(lines);
 });
 
@@ -27,17 +26,15 @@ const { Client } = require("pg");
 async function check() {
   const client = new Client(credentials);
   await client.connect();
-  var outlines = "" 
-  client.query('SELECT * FROM price', (err, res) => {
-  if (err) throw err;
+  var outlines = "";
+  client.query("SELECT * FROM price", (err, res) => {
+    if (err) throw err;
     for (let row of res.rows) {
       console.log(JSON.stringify(row));
     }
     client.end();
-    }
-    );
+  });
 }
-
 
 //app.post("/write", async (req, res) => {
 //  try {
@@ -51,4 +48,3 @@ async function check() {
 //    console.log(error.message);
 //  }
 //});
-
