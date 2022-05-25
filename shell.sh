@@ -4,9 +4,7 @@
 IMAGE_NAME=tsa
 docker run -it \
 --entrypoint /bin/bash \
--p 7546:7545 \
--p 3000:3000 \
--p 3001:3001 \
+-p 3002:3002 \
 --volume /home/$USER/tsa:/home/birdman/app \
 --rm \
 $IMAGE_NAME
