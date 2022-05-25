@@ -2,9 +2,10 @@
 # https://www.marksayson.com/blog/wait-until-docker-containers-initialized/
 set -e
 MAX_TRIES=9
+export DOCKERNAME="tsapostgres"
 
 function dbIsReady(){
-docker logs postgres | grep "PostgreSQL init process complete"
+docker logs $DOCKERNAME | grep "PostgreSQL init process complete"
 }
 
 function whenReady(){

@@ -1,6 +1,6 @@
 const { Pool, Client } = require("pg");
 
-const credentials = require("../connection.json");
+const credentials = require("../scripts/connection.json");
 
 async function insertTimestep(ts, client) {
   const text = `

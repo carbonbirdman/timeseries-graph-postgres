@@ -1,3 +1,6 @@
 #! /bin/bash
-docker stop postgres
-docker rm postgres
+#docker stop tsa-postgres
+#docker rm tsa-postgres
+export DOCKERNAME="tsapostgres"
+docker stop $DOCKERNAME
+docker rm $DOCKERNAME
