@@ -17,7 +17,7 @@ var indexTemplate = `
 <head></head>
 <body>
 <h1>Graph-Node-Postgres-React</h1>
-<p>Get from subgraph save to postgres</p>
+<p>Get from postgres serve as JSON</p>
 <% it.xp %>
 <% it.links.forEach(function(item){ %>
   <a href=" <%= item %> "><%= item %> </a>
@@ -30,7 +30,7 @@ app.get("/", (req, res) => {
   res.send(
     eta.render(indexTemplate, {
       xp: "input text",
-      links: ["data"]
+      links: [""]
     })
   );
 });
