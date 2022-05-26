@@ -1,7 +1,7 @@
 {
-  "user": "user",
-  "database": "db",
-  "password": "pass",
-  "host": "localhost",
+  "user": "tsauser",
+  "database": "tsadb",
+  "password": "password",
+  "host": "34.71.135.230",
   "port": 5432
 }

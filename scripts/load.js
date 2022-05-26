@@ -1,6 +1,47 @@
+import * as fs from "fs";
+import { createRequire } from "module";
+import { isDeepStrictEqual } from "util";
+const require = createRequire(import.meta.url);
 const { Pool, Client } = require("pg");
 
-const credentials = require("../connection.json");
+const credentials = require("./connection.json");
+const client = new Pool(credentials);
+
+const price_filename = "data/price.json";
+
+function loadJSON() {
+  var priceArray = JSON.parse(fs.readFileSync(price_filename));
+  console.log(priceArray);
+  return priceArray;
+}
+
+export function transformData(rawData) {
+  const transformed = rawData.map((x) => ({
+    time: x.index,
+    token: x.pair.token0.symbol,
+    dex: "spirit",
+    price: x.value
+  }));
+  return transformed;
+}
+
+async function tableExists(client) {
+  const text = `SELECT EXISTS (
+    SELECT FROM 
+        tsadb
+    WHERE 
+        tablename  = 'spirit'
+    );`;
+  return await client.query(text);
+}
+
+//CREATE TABLE IF NOT EXISTS  ( \
+//  id BIGSERIAL, \
+//  time TIMESTAMP, \
+//  token VARCHAR(5), \
+//  dex VARCHAR(10), \
+//  price  FLOAT8 \
+//);"
 
 async function insertTimestep(ts, client) {
   const text = `
@@ -12,34 +53,19 @@ async function insertTimestep(ts, client) {
   return await client.query(text, values);
 }
 
-async function populate() {
-  const client = new Client(credentials);
-  await client.connect();
-  const insertResult = await insertTimestep(
-    {
-      time: "2022-05-23 00:00:00",
-      token: "BTC",
-      dex: "SPOOKY",
-      price: "10"
-    },
-    client
-  );
-  const id = insertResult;
-  console.log(id);
-  await client.end();
+export async function populate(transformedData) {
+  //await client.connect();
+  //const idPs = transformedData.map((x) => {
+  //  insertTimestep(x, client);
+  //});
+  //const ids = await Promise.all(idPs);
+  let ids = [];
+  for (const row in transformedData) {
+    console.log(transformedData[row]);
+    ids[row] = insertTimestep(transformedData[row], client);
+  }
+  return await Promise.all(ids);
 }
 
-async function check() {
-  const client = new Client(credentials);
-  await client.connect();
-
-  client.query("SELECT * FROM price", (err, res) => {
-    //console.log(err, res);
-    const prices = res.rows.map((x) => x["price"]);
-    console.log(prices);
-    client.end();
-  });
-}
-
-populate();
-console.log(check());
+//main();
+//populate();

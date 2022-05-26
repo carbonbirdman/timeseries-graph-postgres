@@ -30,7 +30,7 @@ app.get("/", (req, res) => {
   res.send(
     eta.render(indexTemplate, {
       xp: "input text",
-      links: [""]
+      links: ["data", "postgres", "query"]
     })
   );
 });
@@ -44,9 +44,19 @@ app.get("/data", (req, res) => {
   //get();
 });
 
+const credentials = require("../scripts/connection.json");
 app.get("/postgres", (req, res) => {
   var dburl =
-    "postgres://YourUserName:YourPassword@localhost:5432/YourDatabase";
+    "postgres://" +
+    credentials.user +
+    ":" +
+    credentials.password +
+    "@" +
+    credentials.host +
+    ":" +
+    credentials.port +
+    "/" +
+    "tsadb";
   const { Client } = require("pg");
   const client = new Client({
     connectionString: process.env.DATABASE_URL || dburl,

@@ -6,16 +6,24 @@ const { Pool, Client } = require("pg");
 
 const credentials = require("./connection.json");
 console.log(credentials);
+const client = new Pool(credentials);
 
-async function pgconnect() {
-  const client = new Pool(credentials);
+async function pgtest() {
   await client.connect();
   client.query("SELECT * FROM price", (err, res) => {
     console.log(err, res);
-    //const prices = res.rows.map((x) => x["price"]);
-    //console.log(prices);
+    const prices = res.rows.map((x) => x["price"]);
+    console.log(prices);
     client.end();
   });
 }
 
-pgconnect();
+pgtest();
+
+var dbname = "nodetable";
+async function main() {
+  await client.connect();
+  await client.query(`DROP DATABASE IF EXISTS ${dbname};`);
+  await client.query(`CREATE DATABASE ${dbname};`);
+  await client.end();
+}

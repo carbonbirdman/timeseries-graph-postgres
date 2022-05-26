@@ -1,6 +1,9 @@
 // Start with some exploratory queries
 import { request, gql } from "graphql-request";
 import * as fs from "fs";
+
+const price_filename = "data/price.json";
+
 //const gqlr = require("graphql-request");
 const SPIRIT_GRAPH =
   "https://api.thegraph.com/subgraphs/name/layer3org/spiritswap-analytics";
@@ -11,7 +14,7 @@ const SWAPS = gql`
     swaps(
       orderBy: timestamp
       orderDirection: desc
-      first: 100
+      first: 9
       skip: 0
       where: { pair: $pair }
     ) {
@@ -72,8 +75,10 @@ export async function getSpiritPrice() {
   return info;
 }
 
-getSpiritPrice().then((price) => {
-  console.log(price);
-  let price_string = JSON.stringify(price, undefined, 4);
-  fs.writeFileSync("data/price.json", price_string, "utf8");
-});
+function main() {
+  getSpiritPrice().then((price) => {
+    console.log(price);
+    let price_string = JSON.stringify(price, undefined, 4);
+    fs.writeFileSync(price_filename, price_string, "utf8");
+  });
+}
