@@ -4,3 +4,4 @@
 export DOCKERNAME="tsapostgres"
 docker stop $DOCKERNAME
 docker rm $DOCKERNAME
+rm -fr ~/data/pgtsdata

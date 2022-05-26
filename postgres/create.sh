@@ -1,14 +1,14 @@
 #! /bin/bash
 echo $PGPASS
 echo $PGPASSWORD
-
-mkdir -p ./data/pg-ts
+DATAPATH=~/data/pgtsdata
+mkdir -p $DATAPATH
 export DOCKERNAME="tsapostgres"
-#-v ~/data/pg-ts:/var/lib/postgresql/data \
 docker run \
       --name $DOCKERNAME \
       -e POSTGRES_USER=postgres \
       -e POSTGRES_PASSWORD=$PGPASS \
+      -v $DATAPATH:/var/lib/postgresql/data \
       -p 5432:5432 \
       -d postgres
 

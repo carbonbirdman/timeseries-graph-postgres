@@ -3,9 +3,10 @@
 set -e
 MAX_TRIES=9
 export DOCKERNAME="tsapostgres"
-
+# 2022-05-26 06:18:34.213 UTC [1] LOG:  database system is ready to accept connections
 function dbIsReady(){
 docker logs $DOCKERNAME | grep "PostgreSQL init process complete"
+#docker logs $DOCKERNAME | grep "PostgreSQL Database directory appears to contain a database"
 }
 
 function whenReady(){
