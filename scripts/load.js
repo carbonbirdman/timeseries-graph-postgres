@@ -1,10 +1,11 @@
 import * as fs from "fs";
 import { createRequire } from "module";
-import { isDeepStrictEqual } from "util";
 const require = createRequire(import.meta.url);
 const { Pool, Client } = require("pg");
 
 const credentials = require("./connection.json");
+credentials.host = process.env.POSTGRESHOST;
+credentials.password = process.env.PGPASS;
 const client = new Pool(credentials);
 
 const price_filename = "data/price.json";

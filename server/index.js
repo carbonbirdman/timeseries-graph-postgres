@@ -3,7 +3,7 @@ import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 const express = require("express");
 var eta = require("eta");
-require("dotenv").config();
+//require("dotenv").config();
 
 const app = express();
 app.set("view engine", "eta");
@@ -26,6 +26,12 @@ var indexTemplate = `
 </body>
 `;
 
+// SIMPLE HOURLY
+const cron = require("node-cron");
+cron.schedule("7 27 * * * *", () => {
+  console.log("running a task every hour");
+});
+
 app.get("/", (req, res) => {
   res.send(
     eta.render(indexTemplate, {
@@ -45,6 +51,8 @@ app.get("/data", (req, res) => {
 });
 
 const credentials = require("../scripts/connection.json");
+credentials.host = process.env.POSTGRESHOST;
+credentials.password = process.env.PGPASS;
 app.get("/postgres", (req, res) => {
   var dburl =
     "postgres://" +
@@ -59,10 +67,7 @@ app.get("/postgres", (req, res) => {
     "tsadb";
   const { Client } = require("pg");
   const client = new Client({
-    connectionString: process.env.DATABASE_URL || dburl,
-    ssl: {
-      rejectUnauthorized: false
-    }
+    connectionString: process.env.DATABASE_URL || dburl
   });
   client.connect();
 
