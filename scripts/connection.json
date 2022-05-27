@@ -2,6 +2,6 @@
   "user": "tsauser",
   "database": "tsadb",
   "password": "password",
-  "host": "34.71.135.230",
+  "host": "localhost",
   "port": 5432
 }
