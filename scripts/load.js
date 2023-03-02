@@ -1,19 +1,29 @@
 import * as fs from "fs";
+import { price_filename } from "./extract.js";
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 const { Pool, Client } = require("pg");
 
-const credentials = require("./connection.json");
-credentials.host = process.env.POSTGRESHOST;
-credentials.password = process.env.PGPASS;
-const client = new Pool(credentials);
-
-const price_filename = "data/price.json";
+export function getPool() {
+  const credentials = require("./connection.json");
+  credentials.host = process.env.POSTGRESHOST;
+  credentials.password = process.env.PGPASS;
+  console.log(credentials);
+  const client = new Pool(credentials);
+  return client;
+}
 
 function loadJSON() {
   var priceArray = JSON.parse(fs.readFileSync(price_filename));
-  console.log(priceArray);
+  //console.log(priceArray);
   return priceArray;
+}
+
+export function reportOnData(priceArray) {
+  console.log("Type", typeof priceArray);
+  console.log("Size", priceArray.length);
+  console.log("First element", priceArray[0]);
+  //console.log(priceArray.timestamp.toISOString());
 }
 
 export function transformData(rawData) {
@@ -54,16 +64,21 @@ async function insertTimestep(ts, client) {
   return await client.query(text, values);
 }
 
-export async function populate(transformedData) {
+export async function populatePg(transformedData, dryrun, client) {
   //await client.connect();
   //const idPs = transformedData.map((x) => {
   //  insertTimestep(x, client);
   //});
   //const ids = await Promise.all(idPs);
+  console.log(client);
   let ids = [];
   for (const row in transformedData) {
-    console.log(transformedData[row]);
-    ids[row] = insertTimestep(transformedData[row], client);
+    if (dryrun) {
+      //console.log("test");
+      //console.log(transformedData[row]);
+    } else {
+      ids[row] = insertTimestep(transformedData[row], client);
+    }
   }
   return await Promise.all(ids);
 }
